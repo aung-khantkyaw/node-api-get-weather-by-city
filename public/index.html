@@ -140,6 +140,9 @@
         border: 1px solid rgba(249, 115, 22, 0.2);
         box-shadow: 0 18px 40px rgba(209, 118, 28, 0.12);
       }
+      .card--playground {
+        grid-column: span 2;
+      }
       .card h2 {
         margin-top: 0;
         margin-bottom: 0.85rem;
@@ -250,6 +253,67 @@
       .result-box[hidden] {
         display: none;
       }
+      @media (max-width: 960px) {
+        header {
+          padding: clamp(1.25rem, 6vw, 2.25rem);
+        }
+        .masthead-body {
+          grid-template-columns: minmax(0, 1fr);
+          text-align: center;
+          gap: 1.25rem;
+        }
+        .logo-wrapper {
+          order: -1;
+        }
+        .hero-actions {
+          justify-content: center;
+        }
+      }
+      @media (max-width: 720px) {
+        .page {
+          padding: 1.75rem 1.25rem 3rem;
+        }
+        .grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .card--playground {
+          grid-column: span 1;
+        }
+      }
+      @media (max-width: 600px) {
+        header h1 {
+          font-size: 2.1rem;
+        }
+        .hero-actions {
+          flex-direction: column;
+          width: 100%;
+        }
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+        .input-row {
+          flex-direction: column;
+          gap: 0.4rem;
+        }
+        .input-row input[type="text"] {
+          width: 100%;
+          padding: 0.45rem 0.75rem;
+          min-height: 2.4rem;
+        }
+        .input-row button[type="submit"] {
+          width: 100%;
+          align-self: auto;
+          padding: 0.55rem 1rem;
+          min-height: 2.75rem;
+        }
+        form label {
+          font-size: 0.95rem;
+        }
+        .card {
+          padding: 1.25rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -308,7 +372,7 @@ npm run dev</code></pre>
             </li>
           </ul>
         </section>
-        <section class="card" id="playground" style="grid-column: span 2">
+        <section class="card card--playground" id="playground">
           <h2>Playground</h2>
           <p>
             Enter a city name and we will fetch <code>/weather/{city}</code> for

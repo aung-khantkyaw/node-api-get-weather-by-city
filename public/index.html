@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Laziestant - Weather by City API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/logo.png" />
+    <style>
+      :root {
+        font-family: "Source Sans 3", "Source Sans Pro", system-ui,
+          -apple-system, BlinkMacSystemFont, sans-serif;
+        color: #1f1b16;
+        background-color: #fff8ed;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: radial-gradient(
+            circle at 10% 20%,
+            rgba(254, 243, 199, 0.7),
+            transparent 45%
+          ),
+          radial-gradient(
+            circle at 90% 0%,
+            rgba(249, 115, 22, 0.25),
+            transparent 55%
+          ),
+          #fff8ed;
+        color: inherit;
+      }
+      .page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 5vw, 3.5rem) 4rem;
+      }
+      header {
+        background: #0f172a;
+        color: #fff7ed;
+        padding: clamp(1.5rem, 4vw, 3rem);
+        border-radius: 1.5rem;
+        box-shadow: 0 25px 60px rgba(15, 23, 42, 0.45);
+      }
+      header .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.35em;
+        font-size: 0.72rem;
+        color: #fde68a;
+      }
+      header h1 {
+        font-family: "Playfair Display", "Cormorant Garamond", serif;
+        font-size: clamp(2.2rem, 4vw, 3.5rem);
+        margin: 0.4rem 0 0.8rem;
+      }
+      .masthead-body {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        align-items: center;
+      }
+      .lede {
+        margin: 0 0 1.4rem;
+        color: #fef3c7;
+        line-height: 1.6;
+        max-width: 60ch;
+      }
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1.2rem;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.65rem 1.35rem;
+        border-radius: 999px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid rgba(254, 243, 199, 0.3);
+        color: #0f172a;
+        background: #fff7ed;
+        transition: transform 150ms ease, box-shadow 150ms ease;
+      }
+      .btn.primary {
+        background: linear-gradient(120deg, #fbbf24, #f97316);
+        color: #1f1309;
+        border-color: transparent;
+        box-shadow: 0 12px 30px rgba(249, 115, 22, 0.4);
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+      }
+      .tag {
+        border-radius: 0.45rem;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.85rem;
+        background: rgba(255, 247, 237, 0.12);
+        border: 1px solid rgba(254, 243, 199, 0.4);
+      }
+      .tag--green {
+        background: rgba(16, 185, 129, 0.15);
+        border-color: rgba(16, 185, 129, 0.55);
+        color: #065f46;
+        font-weight: 600;
+      }
+      .logo-wrapper {
+        justify-self: center;
+        padding: 0.5rem;
+      }
+      .logo-wrapper img {
+        width: min(280px, 100%);
+        max-width: 320px;
+        filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.35));
+      }
+      .grid {
+        margin-top: 2.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+      .card {
+        background: #fffdf8;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        border: 1px solid rgba(249, 115, 22, 0.2);
+        box-shadow: 0 18px 40px rgba(209, 118, 28, 0.12);
+      }
+      .card h2 {
+        margin-top: 0;
+        margin-bottom: 0.85rem;
+        font-family: "Playfair Display", serif;
+        color: #7c2d12;
+      }
+      pre {
+        background: #111827;
+        color: #fef3c7;
+        border-radius: 0.65rem;
+        padding: 1rem;
+        overflow-x: auto;
+        font-family: "IBM Plex Mono", "Space Mono", monospace;
+        font-size: 0.95rem;
+      }
+      ul {
+        margin: 0;
+        padding-left: 1.2rem;
+        color: #433d33;
+        line-height: 1.6;
+      }
+      li + li {
+        margin-top: 0.4rem;
+      }
+      .endpoint-list {
+        list-style: none;
+        padding-left: 0;
+        margin-left: 0;
+      }
+      .endpoint-list li {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        line-height: 1.8;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        margin-bottom: 1rem;
+      }
+      .input-row {
+        display: flex;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        align-items: stretch;
+      }
+      .input-row input[type="text"] {
+        flex: 1 1 220px;
+      }
+      .input-row button[type="submit"] {
+        align-self: stretch;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 1.4rem;
+      }
+      label {
+        font-weight: 600;
+        color: #3c2f22;
+      }
+      input[type="text"] {
+        border-radius: 0.5rem;
+        border: 1px solid rgba(148, 81, 32, 0.35);
+        padding: 0.7rem 0.9rem;
+        font-size: 1rem;
+        font-family: inherit;
+        background: #fff7ed;
+        color: inherit;
+      }
+      input[type="text"]:focus {
+        outline: 2px solid rgba(249, 115, 22, 0.4);
+        border-color: rgba(249, 115, 22, 0.8);
+      }
+      button[type="submit"] {
+        align-self: flex-start;
+        border-radius: 0.5rem;
+        border: none;
+        padding: 0.7rem 1.4rem;
+        font-weight: 600;
+        color: #1f1309;
+        background: linear-gradient(120deg, #fbbf24, #f97316);
+        cursor: pointer;
+        box-shadow: 0 10px 25px rgba(249, 115, 22, 0.35);
+        transition: transform 140ms ease;
+      }
+      button[type="submit"]:hover {
+        transform: translateY(-2px);
+      }
+      .status {
+        min-height: 1.4rem;
+        color: #6b4423;
+        font-size: 0.95rem;
+      }
+      .status[data-state="error"] {
+        color: #b91c1c;
+      }
+      .status[data-state="success"] {
+        color: #0f766e;
+      }
+      .result-box {
+        margin-top: 1rem;
+        border-radius: 0.75rem;
+        border: 1px dashed rgba(15, 23, 42, 0.25);
+        padding: 1rem;
+        background: rgba(255, 247, 237, 0.85);
+      }
+      .result-box[hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <p class="eyebrow">Laziestant</p>
+        <h1>Weather by City API</h1>
+        <div class="masthead-body">
+          <div>
+            <p class="lede">
+              Call our Express API to proxy Open-Meteo responses. Even when
+              outbound network calls are blocked, we fall back to a curated mock
+              so your demo never breaks.
+            </p>
+            <div class="hero-actions">
+              <a class="btn primary" href="#playground">Launch playground</a>
+              <a
+                class="btn"
+                href="https://open-meteo.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Open-Meteo docs</a
+              >
+            </div>
+            <div class="tags">
+              <span class="tag">Node + Express</span>
+              <span class="tag">Mock fallback</span>
+            </div>
+          </div>
+          <div class="logo-wrapper" aria-hidden="true">
+            <img src="./assets/logo.png" alt="Laziestant mascot" />
+          </div>
+        </div>
+      </header>
+
+      <main class="grid">
+        <section class="card">
+          <h2>Spin it up</h2>
+          <pre><code>npm install
+npm start
+# or live reload
+npm run dev</code></pre>
+        </section>
+        <section class="card">
+          <h2>Endpoints</h2>
+          <ul class="endpoint-list">
+            <li>
+              <span class="tag tag--green">GET</span>
+              <code>/health</code>
+              <span>— Health check</span>
+            </li>
+            <li>
+              <span class="tag tag--green">GET</span>
+              <code>/weather/{city}</code>
+              <span>— Get weather for city</span>
+            </li>
+          </ul>
+        </section>
+        <section class="card" id="playground" style="grid-column: span 2">
+          <h2>Playground</h2>
+          <p>
+            Enter a city name and we will fetch <code>/weather/{city}</code> for
+            you.
+          </p>
+          <form id="city-form">
+            <label for="city-input">City name</label>
+            <div class="input-row">
+              <input
+                id="city-input"
+                name="city"
+                type="text"
+                placeholder="Maubin"
+                autocomplete="off"
+              />
+              <button type="submit">Fetch weather</button>
+            </div>
+          </form>
+          <p id="status" class="status" aria-live="polite">
+            Enter a city to begin.
+          </p>
+          <div class="result-box" id="result" hidden>
+            <pre><code id="response"></code></pre>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      const form = document.getElementById("city-form");
+      const statusEl = document.getElementById("status");
+      const responseEl = document.getElementById("response");
+      const resultBox = document.getElementById("result");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const cityInput = document.getElementById("city-input");
+        const city = cityInput.value.trim();
+
+        if (!city) {
+          statusEl.dataset.state = "error";
+          statusEl.textContent = "Enter a city name first.";
+          resultBox.hidden = true;
+          return;
+        }
+
+        statusEl.dataset.state = "loading";
+        statusEl.textContent = `Loading weather for "${city}"...`;
+        resultBox.hidden = true;
+
+        try {
+          const resp = await fetch(`/weather/${encodeURIComponent(city)}`);
+          if (!resp.ok) {
+            throw new Error(`Request failed with status ${resp.status}`);
+          }
+          const data = await resp.json();
+          responseEl.textContent = JSON.stringify(data, null, 2);
+          resultBox.hidden = false;
+          statusEl.dataset.state = "success";
+          statusEl.textContent = `Showing weather for "${city}"`;
+        } catch (error) {
+          statusEl.dataset.state = "error";
+          statusEl.textContent = error.message;
+        }
+      });
+    </script>
+  </body>
+</html>

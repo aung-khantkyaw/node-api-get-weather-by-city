@@ -122,31 +122,56 @@ function buildMockHourly() {
   });
 }
 
-async function getWeatherPayload(rawCity) {
-  const city = rawCity?.trim() || DEFAULT_CITY;
+async function getWeatherPayload(rawCity, coordinateOptions = null) {
+  const trimmedCity = rawCity?.trim();
+  const fallbackCity = trimmedCity || DEFAULT_CITY;
+  const candidateLat = coordinateOptions?.lat;
+  const candidateLon = coordinateOptions?.lon;
+  const hasCoordinateInput =
+    typeof candidateLat !== "undefined" &&
+    typeof candidateLon !== "undefined" &&
+    Number.isFinite(Number(candidateLat)) &&
+    Number.isFinite(Number(candidateLon));
+
+  let latitude;
+  let longitude;
+  let locationLabel = trimmedCity || null;
 
   try {
-    const geoResp = await axios.get(
-      "https://geocoding-api.open-meteo.com/v1/search",
-      {
-        params: { name: city, count: 1 },
-        timeout: 10000,
+    if (hasCoordinateInput) {
+      latitude = Number(candidateLat);
+      longitude = Number(candidateLon);
+      const labelCandidate = coordinateOptions?.label?.trim();
+      if (!locationLabel) {
+        locationLabel = labelCandidate?.length
+          ? labelCandidate
+          : `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
       }
-    );
+    } else {
+      const geoResp = await axios.get(
+        "https://geocoding-api.open-meteo.com/v1/search",
+        {
+          params: { name: fallbackCity, count: 1 },
+          timeout: 10000,
+        }
+      );
 
-    if (!geoResp.data.results?.length) {
-      throw new Error(`City '${city}' not found`);
+      if (!geoResp.data.results?.length) {
+        throw new Error(`City '${fallbackCity}' not found`);
+      }
+
+      const result = geoResp.data.results[0];
+      latitude = result.latitude;
+      longitude = result.longitude;
+      locationLabel = result.name;
     }
-
-    const result = geoResp.data.results[0];
-    const { latitude: lat, longitude: lon } = result;
 
     const weatherResp = await axios.get(
       "https://api.open-meteo.com/v1/forecast",
       {
         params: {
-          latitude: lat,
-          longitude: lon,
+          latitude,
+          longitude,
           current:
             "temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code",
           hourly:
@@ -162,16 +187,18 @@ async function getWeatherPayload(rawCity) {
 
     const data = weatherResp.data;
     const current = data.current;
+    const safeLocationLabel = locationLabel || fallbackCity;
 
     return {
       source: "open-meteo",
       current: {
         temperature: Math.round(current.temperature_2m).toString(),
-        location: result.name,
+        location: safeLocationLabel,
         humidity: `${current.relative_humidity_2m}%`,
         wind: `${current.wind_speed_10m} km/h`,
         code: current.weather_code,
         status: getWeatherStatus(current.weather_code),
+        time: current.time,
         unit: "Celsius",
       },
       forecast: data.daily.time.slice(0, FORECAST_DAYS).map((time, index) => {
@@ -215,8 +242,9 @@ async function getWeatherPayload(rawCity) {
     ]);
 
     if (networkCodes.has(error.code) || error.message?.includes("Network")) {
+      const fallbackLabel = (locationLabel || fallbackCity).toString();
       const cityDisplay =
-        city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
+        fallbackLabel.charAt(0).toUpperCase() + fallbackLabel.slice(1);
       return {
         source: "mock (network blocked)",
         current: {
@@ -226,6 +254,7 @@ async function getWeatherPayload(rawCity) {
           wind: "12 km/h",
           code: 45,
           status: getWeatherStatus(45),
+          time: new Date().toISOString(),
           unit: "Celsius",
         },
         forecast: buildMockForecast(),

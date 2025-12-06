@@ -39,7 +39,8 @@ node src/index.js "New York"
 ### API Endpoints
 
 - `GET /health` - Health check
-- `GET /v1/weather/{city}` - Get weather for city
+- `GET /v2/weather/{city}` - Get weather for city
+- `GET /v2/weather?lat=...&lon=...` - Get weather for coordinates
 
 ### Example Response
 ```json

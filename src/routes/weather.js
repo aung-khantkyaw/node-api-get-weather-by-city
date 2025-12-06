@@ -3,7 +3,7 @@ const { getWeatherPayload } = require("../services/weatherService");
 
 const router = Router();
 
-router.get("/weather/:city", async (req, res) => {
+router.get("/v1/weather/:city", async (req, res) => {
   try {
     const weather = await getWeatherPayload(req.params.city);
     res.json(weather);

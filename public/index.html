@@ -351,14 +351,14 @@
 
       <main class="grid">
         <section class="card">
-          <h2>Spin it up</h2>
+          <h2>Quick Start</h2>
           <pre><code>npm install
 npm start
 # or live reload
 npm run dev</code></pre>
         </section>
         <section class="card">
-          <h2>Endpoints</h2>
+          <h2>API Endpoints</h2>
           <ul class="endpoint-list">
             <li>
               <span class="tag tag--green">GET</span>
@@ -367,7 +367,7 @@ npm run dev</code></pre>
             </li>
             <li>
               <span class="tag tag--green">GET</span>
-              <code>/weather/{city}</code>
+              <code>/v1/weather/{city}</code>
               <span>— Get weather for city</span>
             </li>
           </ul>
@@ -375,8 +375,8 @@ npm run dev</code></pre>
         <section class="card card--playground" id="playground">
           <h2>Playground</h2>
           <p>
-            Enter a city name and we will fetch <code>/weather/{city}</code> for
-            you.
+            Enter a city name and we will fetch
+            <code>/v1/weather/{city}</code> for you.
           </p>
           <form id="city-form">
             <label for="city-input">City name</label>
@@ -423,7 +423,7 @@ npm run dev</code></pre>
         resultBox.hidden = true;
 
         try {
-          const resp = await fetch(`/weather/${encodeURIComponent(city)}`);
+          const resp = await fetch(`/v1/weather/${encodeURIComponent(city)}`);
           if (!resp.ok) {
             throw new Error(`Request failed with status ${resp.status}`);
           }

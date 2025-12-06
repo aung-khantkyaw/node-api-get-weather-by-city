@@ -39,54 +39,248 @@ node src/index.js "New York"
 ### API Endpoints
 
 - `GET /health` - Health check
-- `GET /weather/{city}` - Get weather for city
+- `GET /v1/weather/{city}` - Get weather for city
 
 ### Example Response
 ```json
 {
-  "source": "mock (network blocked)",
+  "source": "open-meteo",
   "current": {
     "temperature": "28",
-    "city": "Maubin",
-    "humidity": "75%",
-    "wind": "12 km/h",
+    "location": "Maubin",
+    "humidity": "72%",
+    "wind": "9.6 km/h",
+    "code": 2,
+    "status": "Partly cloudy",
     "unit": "Celsius"
   },
   "forecast": [
-    { "day": "Fri", "high": "32", "low": "24" },
-    { "day": "Sat", "high": "31", "low": "23" },
-    { "day": "Sun", "high": "30", "low": "22" },
-    { "day": "Mon", "high": "29", "low": "24" },
-    { "day": "Tue", "high": "28", "low": "23" },
-    { "day": "Wed", "high": "27", "low": "22" },
-    { "day": "Thu", "high": "26", "low": "24" },
-    { "day": "Fri", "high": "25", "low": "23" }
+    {
+      "day": "Sat",
+      "high": "31",
+      "low": "23",
+      "status": "Overcast",
+      "windSpeed": "10",
+      "windDirection": "NNE"
+    },
+    {
+      "day": "Sun",
+      "high": "31",
+      "low": "23",
+      "status": "Mainly clear",
+      "windSpeed": "12",
+      "windDirection": ""
+    },
+    {
+      "day": "Mon",
+      "high": "31",
+      "low": "22",
+      "status": "Overcast",
+      "windSpeed": "12",
+      "windDirection": "NNE"
+    },
+    {
+      "day": "Tue",
+      "high": "30",
+      "low": "22",
+      "status": "Partly cloudy",
+      "windSpeed": "9",
+      "windDirection": "ENE"
+    },
+    {
+      "day": "Wed",
+      "high": "29",
+      "low": "22",
+      "status": "Light rain showers",
+      "windSpeed": "8",
+      "windDirection": "NNE"
+    },
+    {
+      "day": "Thu",
+      "high": "30",
+      "low": "22",
+      "status": "Partly cloudy",
+      "windSpeed": "10",
+      "windDirection": "NNE"
+    },
+    {
+      "day": "Fri",
+      "high": "30",
+      "low": "21",
+      "status": "Partly cloudy",
+      "windSpeed": "11",
+      "windDirection": "N"
+    }
   ],
   "hourly": [
-    { "hour": "00:00", "temp": "26" },
-    { "hour": "01:00", "temp": "27" },
-    { "hour": "02:00", "temp": "28" },
-    { "hour": "03:00", "temp": "29" },
-    { "hour": "04:00", "temp": "30" },
-    { "hour": "05:00", "temp": "31" },
-    { "hour": "06:00", "temp": "32" },
-    { "hour": "07:00", "temp": "33" },
-    { "hour": "08:00", "temp": "26" },
-    { "hour": "09:00", "temp": "27" },
-    { "hour": "10:00", "temp": "28" },
-    { "hour": "11:00", "temp": "29" },
-    { "hour": "12:00", "temp": "30" },
-    { "hour": "13:00", "temp": "31" },
-    { "hour": "14:00", "temp": "32" },
-    { "hour": "15:00", "temp": "33" },
-    { "hour": "16:00", "temp": "26" },
-    { "hour": "17:00", "temp": "27" },
-    { "hour": "18:00", "temp": "28" },
-    { "hour": "19:00", "temp": "29" },
-    { "hour": "20:00", "temp": "30" },
-    { "hour": "21:00", "temp": "31" },
-    { "hour": "22:00", "temp": "32" },
-    { "hour": "23:00", "temp": "33" }
+    {
+      "hour": "00:00",
+      "temp": "24",
+      "status": "Partly cloudy",
+      "windSpeed": "5",
+      "windDirection": "N"
+    },
+    {
+      "hour": "01:00",
+      "temp": "24",
+      "status": "Partly cloudy",
+      "windSpeed": "5",
+      "windDirection": "N"
+    },
+    {
+      "hour": "02:00",
+      "temp": "24",
+      "status": "Partly cloudy",
+      "windSpeed": "6",
+      "windDirection": "N"
+    },
+    {
+      "hour": "03:00",
+      "temp": "24",
+      "status": "Overcast",
+      "windSpeed": "7",
+      "windDirection": "N"
+    },
+    {
+      "hour": "04:00",
+      "temp": "24",
+      "status": "Overcast",
+      "windSpeed": "7",
+      "windDirection": "N"
+    },
+    {
+      "hour": "05:00",
+      "temp": "23",
+      "status": "Overcast",
+      "windSpeed": "7",
+      "windDirection": "N"
+    },
+    {
+      "hour": "06:00",
+      "temp": "23",
+      "status": "Overcast",
+      "windSpeed": "6",
+      "windDirection": "NNE"
+    },
+    {
+      "hour": "07:00",
+      "temp": "24",
+      "status": "Overcast",
+      "windSpeed": "6",
+      "windDirection": "NNE"
+    },
+    {
+      "hour": "08:00",
+      "temp": "25",
+      "status": "Partly cloudy",
+      "windSpeed": "8",
+      "windDirection": "NNE"
+    },
+    {
+      "hour": "09:00",
+      "temp": "27",
+      "status": "Partly cloudy",
+      "windSpeed": "9",
+      "windDirection": "NNE"
+    },
+    {
+      "hour": "10:00",
+      "temp": "28",
+      "status": "Partly cloudy",
+      "windSpeed": "10",
+      "windDirection": "NNE"
+    },
+    {
+      "hour": "11:00",
+      "temp": "30",
+      "status": "Partly cloudy",
+      "windSpeed": "9",
+      "windDirection": "NNE"
+    },
+    {
+      "hour": "12:00",
+      "temp": "31",
+      "status": "Overcast",
+      "windSpeed": "9",
+      "windDirection": "NNE"
+    },
+    {
+      "hour": "13:00",
+      "temp": "31",
+      "status": "Overcast",
+      "windSpeed": "8",
+      "windDirection": "ENE"
+    },
+    {
+      "hour": "14:00",
+      "temp": "30",
+      "status": "Overcast",
+      "windSpeed": "8",
+      "windDirection": "ENE"
+    },
+    {
+      "hour": "15:00",
+      "temp": "30",
+      "status": "Partly cloudy",
+      "windSpeed": "6",
+      "windDirection": "ENE"
+    },
+    {
+      "hour": "16:00",
+      "temp": "30",
+      "status": "Partly cloudy",
+      "windSpeed": "5",
+      "windDirection": "ENE"
+    },
+    {
+      "hour": "17:00",
+      "temp": "28",
+      "status": "Partly cloudy",
+      "windSpeed": "3",
+      "windDirection": "ENE"
+    },
+    {
+      "hour": "18:00",
+      "temp": "28",
+      "status": "Partly cloudy",
+      "windSpeed": "2",
+      "windDirection": "E"
+    },
+    {
+      "hour": "19:00",
+      "temp": "27",
+      "status": "Partly cloudy",
+      "windSpeed": "1",
+      "windDirection": "NE"
+    },
+    {
+      "hour": "20:00",
+      "temp": "27",
+      "status": "Mainly clear",
+      "windSpeed": "2",
+      "windDirection": "NW"
+    },
+    {
+      "hour": "21:00",
+      "temp": "26",
+      "status": "Mainly clear",
+      "windSpeed": "3",
+      "windDirection": "WNW"
+    },
+    {
+      "hour": "22:00",
+      "temp": "26",
+      "status": "Mainly clear",
+      "windSpeed": "3",
+      "windDirection": "NW"
+    },
+    {
+      "hour": "23:00",
+      "temp": "25",
+      "status": "Clear sky",
+      "windSpeed": "4",
+      "windDirection": "NW"
+    }
   ]
 }
 ```
